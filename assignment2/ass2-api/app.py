@@ -28,7 +28,8 @@ class CookList(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'create_date': self.create_date.isoformat()  # 转换为 ISO 格式字符串
+            'create_date': self.create_date.isoformat(),  # 转换为 ISO 格式字符串
+            'message': self.message  # 添加 message 字段
         }
 
 # 创建数据库表（如果需要）
