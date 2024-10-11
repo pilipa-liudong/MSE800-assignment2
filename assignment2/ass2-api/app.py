@@ -193,5 +193,33 @@ def get_cook_list(userId):
     cook_list = CookList.query.filter_by(user_id=userId).order_by(CookList.create_date.desc()).all()
     return jsonify([cook.to_dict() for cook in cook_list])  # 这里调用 to_dict 方法
 
+# 新增方法
+@app.route('/cook_list/<int:id>', methods=['DELETE'])
+def delete_cook_list(id):
+    """
+    根据 id 删除 cook_list 表中的数据
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+        description: 烹饪消息的 ID
+    responses:
+      200:
+        description: 成功删除烹饪消息
+      404:
+        description: 找不到指定的烹饪消息
+    """
+    cook_message = CookList.query.get(id)  # 根据 ID 查询烹饪消息
+
+    if not cook_message:
+        return jsonify({"error": "找不到指定的烹饪消息"}), 404
+
+    db.session.delete(cook_message)  # 删除烹饪消息
+    db.session.commit()
+
+    return jsonify({"message": "成功删除烹饪消息"}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
