@@ -4,7 +4,7 @@ from groq import Groq
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_swagger_ui import get_swaggerui_blueprint
-from flask_cors import CORS  # 导入 CORS
+from flask_cors import CORS  
 
 app = Flask(__name__)
 CORS(app)  # 启用 CORS
@@ -40,24 +40,24 @@ with app.app_context():
 @app.route('/login', methods=['POST'])
 def login():
     """
-    用户登录
+    User login
     ---
     parameters:
       - name: username
         in: body
         type: string
         required: true
-        description: 用户名
+        description: Username
       - name: password
         in: body
         type: string
         required: true
-        description: 密码
+        description: Password
     responses:
       200:
-        description: 登录成功
+        description: Login successful
       401:
-        description: 用户名或密码错误
+        description: Username or password incorrect
     """
     data = request.json
     username = data.get('username')
@@ -74,7 +74,7 @@ def login():
 @app.route('/getFoodSmart', methods=['POST'])
 def getFoodSmart():
     """
-    获取食物智能建议
+    get food references from AI
     ---
     parameters:
       - name: body
@@ -85,21 +85,15 @@ def getFoodSmart():
           properties:
             ingredients:
               type: string
-              description: 食材
-              example: "鸡肉, 米饭, 胡萝卜"
+              description: Ingredients
+              example: "Chicken, Rice, Carrots"
             instructions:
               type: string
-              description: 制作步骤
-              example: "将鸡肉煮熟，加入米饭和胡萝卜，搅拌均匀。"
+              description: Cooking instructions
+              example: "Cook the chicken, add rice and carrots, and stir well."
     responses:
       200:
-        description: 返回食材和步骤
-        schema:
-          type: object
-          properties:
-            message:
-              type: string
-              description: 菜谱和详细步骤
+        description: Returns ingredients and instructions
     """
     data = request.json
     ingredients = data.get('ingredients')
@@ -134,7 +128,7 @@ def getFoodSmart():
 @app.route('/saveCookMessage', methods=['POST'])
 def saveCookMessage():
     """
-    保存烹饪消息
+    Save cooking message
     ---
     parameters:
       - name: body
@@ -145,24 +139,24 @@ def saveCookMessage():
           properties:
             userId:
               type: string
-              description: 用户ID
+              description: User ID
               example: "user123"
             cookMessage:
               type: string
-              description: 烹饪消息
-              example: "今天的晚餐是意大利面。"
+              description: Cooking message
+              example: "Today's dinner is spaghetti."
     responses:
       200:
-        description: 消息保存成功
+        description: Message saved successfully
       400:
-        description: 请求参数错误
+        description: Request parameter error
     """
     data = request.json
     user_id = data.get('userId')
     cook_message = data.get('cookMessage')
 
     if not user_id or not cook_message:
-        return jsonify({"error": "缺少 userId 或 cookMessage"}), 400
+        return jsonify({"error": "no userId 或 cookMessage"}), 400
 
     new_message = CookList(user_id=user_id, message=cook_message)
     db.session.add(new_message)
@@ -174,17 +168,17 @@ def saveCookMessage():
 @app.route('/cook_list/<userId>', methods=['GET'])
 def get_cook_list(userId):
     """
-    根据 userId 查询 cook_list 表中的数据，按照 create_date 倒序排列
+    Query the cook_list table based on userId, ordered by create_date in descending order
     ---
     parameters:
       - name: userId
         in: path
-        type: string  # 修改为 string 类型
+        type: string  # Changed to string type
         required: true
-        description: 用户 ID
+        description: User ID
     responses:
       200:
-        description: 成功返回 cook_list 数据
+        description: Successfully returns cook_list data
         schema:
           type: array
           items:
@@ -197,29 +191,29 @@ def get_cook_list(userId):
 @app.route('/cook_list/<int:id>', methods=['DELETE'])
 def delete_cook_list(id):
     """
-    根据 id 删除 cook_list 表中的数据
+    Delete data from the cook_list table based on id
     ---
     parameters:
       - name: id
         in: path
         type: integer
         required: true
-        description: 烹饪消息的 ID
+        description: Cooking message ID
     responses:
       200:
-        description: 成功删除烹饪消息
+        description: Successfully deleted cooking message
       404:
-        description: 找不到指定的烹饪消息
+        description: Cooking message not found
     """
     cook_message = CookList.query.get(id)  # 根据 ID 查询烹饪消息
 
     if not cook_message:
-        return jsonify({"error": "找不到指定的烹饪消息"}), 404
+        return jsonify({"error": "Cooking message not found"}), 404
 
-    db.session.delete(cook_message)  # 删除烹饪消息
+    db.session.delete(cook_message)  # Delete cooking message
     db.session.commit()
 
-    return jsonify({"message": "成功删除烹饪消息"}), 200
+    return jsonify({"message": "Successfully deleted cooking message"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
