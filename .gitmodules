@@ -1,0 +1,3 @@
+[submodule "assignment2/ass2-web/AI-Recipe"]
+	path = assignment2/ass2-web/AI-Recipe
+	url = https://github.com/namelessman/AI-Recipe.git
