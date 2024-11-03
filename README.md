@@ -25,7 +25,7 @@ Ensure the following are installed on your local machine before starting:
 Clone the repository along with its submodules using:
 
 ```bash
-git clone --recurse-submodules <repository-url>
+git clone --recurse-submodules git@github.com:pilipa-liudong/MSE800-assignment2.git
 ```
 
 ### 2. Setup Backend
